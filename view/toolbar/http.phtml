@@ -1,0 +1,138 @@
+<?php use DshafikProfiler\Http\Profiler\Profiler; ?>
+<div class="zdt-toolbar-entry">
+    <div class="zdt-toolbar-preview">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAUCAYAAACeXl35AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQhJREFUeNq8lYENgjAQRU/jAN1ARsAJxA0YgRHYgDABI+gm1QlgA+IEuEG96q85URCB8pMH5JrmuEvvl4wx1EHcszaaNX0qYDRzZEKaWe2EKVMyitkx1dwJXakBo81TJaN8tNOy4oetKkNVN+aEt9WFOeM7E//ZFb9iv1XCbMVa7iqsTbcy8XdD4lrEdWvtESe0r0CwYRJf7XQJHZGoNlkiYbvaYomEslp7WsOlEk4l/sdppiqES2m4Vq/TzKEKLqXgWuk3p/GBwjlw8xk4p6FRjkEUMfsfcYX9zsVyGusYcJshcanaZ0sJBtKIuVa+kxm4V+R7DqVbvV11G09zaA/OQVxhL90FGAAwHpr/UyXedQAAAABJRU5ErkJggg==" alt="HTTP Requests">
+        <span class="zdt-toolbar-info">
+            <?php
+            if ($this->collector->hasProfiler()) {
+                printf('%d in %s', $this->collector->getRequestCount(), $this->ZendDeveloperToolsTime($this->collector->getRequestTime()));
+            } else {
+                echo 'N/A';
+            }
+            ?>
+        </span>
+    </div>
+    <div class="zdt-toolbar-detail zdt-toolbar-dbquery-detail">
+        <div class="zdt-toolbar-detail-inner">
+            <?php if ($this->collector->hasProfiler()) : ?>
+            <span class="zdt-toolbar-info zdt-toolbar-info-heading">Quantity</span>
+            <span class="zdt-toolbar-info">
+                <span class="zdt-detail-label">GET</span>
+                <span class="zdt-detail-value zdt-detail-value-right"><?php echo $this->collector->getRequestCount(Profiler::GET); ?></span>
+            </span>
+            <span class="zdt-toolbar-info">
+                <span class="zdt-detail-label">POST</span>
+                <span class="zdt-detail-value zdt-detail-value-right"><?php echo $this->collector->getRequestCount(Profiler::POST); ?></span>
+            </span>
+            <span class="zdt-toolbar-info">
+                <span class="zdt-detail-label">PUT</span>
+                <span class="zdt-detail-value zdt-detail-value-right"><?php echo $this->collector->getRequestCount(Profiler::PUT); ?></span>
+            </span>
+            <span class="zdt-toolbar-info">
+                <span class="zdt-detail-label">DELETE</span>
+                <span class="zdt-detail-value zdt-detail-value-right"><?php echo $this->collector->getRequestCount(Profiler::DELETE); ?></span>
+            </span>
+
+            <span class="zdt-toolbar-info zdt-toolbar-info-heading zdt-toolbar-topspacing">Time</span>
+            <span class="zdt-toolbar-info">
+                <span class="zdt-detail-label">GET</span>
+                <span class="zdt-detail-value zdt-detail-value-right"><?php echo $this->ZendDeveloperToolsTime($this->collector->getRequestTime(Profiler::GET)); ?></span>
+            </span>
+            <span class="zdt-toolbar-info">
+                <span class="zdt-detail-label">POST</span>
+                <span class="zdt-detail-value zdt-detail-value-right"><?php echo $this->ZendDeveloperToolsTime($this->collector->getRequestTime(Profiler::POST)); ?></span>
+            </span>
+            <span class="zdt-toolbar-info">
+                <span class="zdt-detail-label">PUT</span>
+                <span class="zdt-detail-value zdt-detail-value-right"><?php echo $this->ZendDeveloperToolsTime($this->collector->getRequestTime(Profiler::PUT)); ?></span>
+            </span>
+            <span class="zdt-toolbar-info">
+                <span class="zdt-detail-label">DELETE</span>
+                <span class="zdt-detail-value zdt-detail-value-right"><?php echo $this->ZendDeveloperToolsTime($this->collector->getRequestTime(Profiler::DELETE)); ?></span>
+            </span>
+
+            <span class="zdt-toolbar-info zdt-toolbar-info-heading zdt-toolbar-topspacing zdt-toolbar-dbquery-heading">Request Profiles</span>
+            <span class="zdt-toolbar-info zdt-toolbar-dbquery">
+            <?php $profiler = $this->collector->getProfiler(); ?>
+            <?php foreach ($profiler->getRequestProfiles() as $profile): ?>
+                <?php $request = $profile->toArray(); ?>
+                <hr />
+                <span class="zdt-detail-label">URL</span>
+                <span class="zdt-detail-value zdt-detail-dbquery zdt-detail-dbquery-sql">
+                    <?php echo '<span class="highlight">', $request['method'], '</span> ', $this->escapeHtml($request['url']) ?>
+                </span>
+                <span class="clear"></span>
+                <span class="zdt-detail-label">Status</span>
+                <span class="zdt-detail-value zdt-detail-dbquery zdt-detail-dbquery-sql">
+                    <?php
+                    if (200 <= $request['status'] && 300 > $request['status']) {
+                        $class = "highlight";
+                    } else {
+                        $class = "error";
+                    }
+                    ?>
+                    <?php echo '<span class="', $class, '">', $request['status'], '</span>' ?>
+                </span>
+                <span class="clear"></span>
+                <span class="zdt-detail-label">Time</span>
+                <span class="zdt-detail-value zdt-detail-dbquery zdt-detail-dbquery-time">
+                    <?php echo $this->escapeHtml($this->ZendDeveloperToolsTime($request['elapsed'])) ?>
+                </span>
+                <span class="clear"></span>
+            <?php endforeach; ?>
+            </span>
+            <?php else: ?>
+            <span class="zdt-toolbar-info zdt-toolbar-info-heading">Error</span>
+            <span class="zdt-toolbar-info">
+                You have to install or enable <a href="https://github.com/dshafik/DshafikProfiler">@dshafik's HTTP Profiler</a> to use this feature.
+            </span>
+            <?php endif ?>
+        </div>
+    </div>
+</div>
+<style>
+.zdt-toolbar-entry .zdt-toolbar-detail .zdt-toolbar-detail-inner {
+    padding: 5px;
+    font-size: 11px;
+    max-width: 600px;
+    width: 600px;
+    max-height: 400px;
+    min-height: 100px;
+    overflow-y: auto!important;
+    overflow-x: hidden;
+}
+
+.zdt-toolbar-entry .zdt-toolbar-dbquery-detail .zdt-detail-value-right {
+
+}
+
+.zdt-toolbar-entry .zdt-toolbar-detail .zdt-toolbar-detail-inner .zdt-toolbar-dbquery {
+    max-height: none!important;
+}
+
+.zdt-toolbar-entry .zdt-toolbar-detail .zdt-detail-dbquery {
+    white-space: normal;
+    width: 400px;
+}
+
+.zdt-toolbar-entry .zdt-toolbar-detail .zdt-detail-dbquery .highlight {
+    color: #80DC09;
+    font-weight: bold;
+}
+
+.zdt-toolbar-entry .zdt-toolbar-detail .zdt-detail-dbquery .error {
+    color: #e83535;
+    font-weight: bold;
+}
+
+.zdt-toolbar-entry .zdt-toolbar-info .clear {
+    clear: both;
+    display: block;
+}
+
+.zdt-toolbar-entry .zdt-toolbar-detail .zdt-toolbar-dbquery hr {
+    border: 0;
+    border-top: 1px solid #80DC09;
+    clear: both;
+}
+</style>

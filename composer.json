@@ -1,0 +1,26 @@
+{
+    "name": "dshafik/dshafik-profiler",
+    "description": "HTTP profiler plugin for ZendDeveloperTools",
+    "type": "library",
+    "homepage": "https://github.com/dshafik/dshafik-profiler",
+    "authors": [
+        {
+            "name": "Davey Shafik",
+            "email": "me@daveyshafik.com",
+            "homepage": "http://daveyshafik.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3",
+        "zendframework/zendframework": ">=2.1.0",
+        "zendframework/zend-developer-tools": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "DshafikProfiler": "src/"
+        },
+        "classmap": [
+            "./Module.php"
+        ]
+    }
+}
