@@ -75,12 +75,18 @@ class Stream {
 
     protected function getContext()
     {
-        $context = (!is_null($this->context)) ? stream_context_get_options($this->context) : ['http' => []];
         $defaults = stream_context_get_options(stream_context_get_default());
         if (isset($defaults['http'])) {
             $defaults = $defaults['http'];
         } else {
-            $defaults = ['http' => []];
+            $defaults = [];
+        }
+
+        $context = (!is_null($this->context)) ? stream_context_get_options($this->context) : [];
+        if (isset($context['http'])) {
+            $context = $context['http'];
+        } else {
+            $context = [];
         }
 
         $context = array_merge(
@@ -88,8 +94,8 @@ class Stream {
                 'method' => 'GET',
                 'user_agent' => 'dshafik/http-profiler PHP/' .PHP_VERSION,
             ],
-            $defaults['http'],
-            $context['http']
+            $defaults,
+            $context
         );
 
         if (isset($context['header']) && is_string($context['header'])) {
